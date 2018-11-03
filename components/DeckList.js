@@ -1,28 +1,64 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+	ScrollView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { List, ListItem } from 'react-native-elements';
 
-const DeckList = props => {
-	const renderDeck = item => {
+class DeckList extends Component {
+	handleOnPress(key) {
+		const { navigation } = this.props;
+		const { updateDeck } = this.props.screenProps;
+
+		navigation.navigate('Deck', {
+			title: key,
+			updateDeck: updateDeck,
+		});
+	}
+	renderDeck = ({ item }) => {
+		const { decks } = this.props.screenProps;
+		const key = item;
+		const cardCount = decks[key].cards.length;
+		const deckTitle = decks[key].title;
+		const deckSize =
+			cardCount > 1 ? cardCount + ' cards' : cardCount + ' card';
+
 		return (
-			<View>
-				<TouchableOpacity>
-					<View>
-						<Text>Card's Name</Text>
-					</View>
-					<View>
-						<Text>Number of Questions</Text>
-					</View>
-				</TouchableOpacity>
-			</View>
+			<ListItem
+				title={deckTitle}
+				subtitle={deckSize}
+				containerStyle={styles.deck}
+				onPress={() => this.handleOnPress(key)}
+			/>
 		);
 	};
+	render() {
+		const { decks } = this.props.screenProps;
 
-	return (
-		<View>
-			<FlatList data={['Hello', 'World']} renderItem={renderDeck} />
-		</View>
-	);
-};
+		return decks ? (
+			<List>
+				<FlatList
+					data={Object.keys(decks)}
+					renderItem={this.renderDeck}
+					keyExtractor={(item, index) => index.toString()}
+				/>
+			</List>
+		) : null;
+	}
+}
+
+const styles = StyleSheet.create({
+	deck: {
+		height: 100,
+		paddingTop: 25,
+		paddingBottom: 25,
+		paddingLeft: 25,
+		paddingRight: 25,
+	},
+});
 
 export default DeckList;
