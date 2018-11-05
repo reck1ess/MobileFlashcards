@@ -6,18 +6,19 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-import {
-	Button,
-	FormLabel,
-	FormInput,
-	FormValidationMessage,
-} from 'react-native-elements';
+import { Button, Card, FormValidationMessage } from 'react-native-elements';
 
 import { saveDeckTitle } from '../utils/api';
 
 class NewDeck extends Component {
 	state = {
 		deckTitle: '',
+	};
+
+	handleOnChange = deckTitle => {
+		this.setState({
+			deckTitle,
+		});
 	};
 
 	handleOnPress = () => {
@@ -42,25 +43,33 @@ class NewDeck extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<FormLabel>Please set the title of your card deck.</FormLabel>
-				<FormInput
-					placeholder="Deck Title"
-					value={this.state.deckTitle}
-					containerStyle={{ margin: 50 }}
-					onChangeText={text => this.setState({ deckTitle: text })}
-				/>
-				{this.state.deckTitle == '' ? (
-					<FormValidationMessage>
-						{'This field is required'}
-					</FormValidationMessage>
-				) : (
-					<FormValidationMessage />
-				)}
-				<Button
-					title="SUBMIT"
-					buttonStyle={{ margin: 50 }}
-					onPress={() => this.handleOnPress()}
-				/>
+				<Card>
+					<View>
+						<Text style={styles.text}>Deck Title</Text>
+					</View>
+					<View style={styles.textInputContainer}>
+						<TextInput
+							onChangeText={this.handleOnChange}
+							placeholder="Please enter deck title"
+							value={this.state.deckTitle}
+							style={styles.textInput}
+						/>
+					</View>
+					{this.state.deckTitle == '' ? (
+						<FormValidationMessage>
+							{'This field is required'}
+						</FormValidationMessage>
+					) : (
+						<FormValidationMessage />
+					)}
+					<Button
+						icon={{ name: 'done' }}
+						backgroundColor="#03A9F4"
+						buttonStyle={styles.button}
+						title="SUBMIT"
+						onPress={() => this.handleOnPress()}
+					/>
+				</Card>
 			</View>
 		);
 	}
@@ -70,7 +79,31 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
+	},
+	text: {
+		marginLeft: 'auto',
+		marginRight: 'auto',
+		marginTop: 20,
+		marginBottom: 20,
+		fontWeight: '100',
+		fontSize: 40,
+	},
+	textInputContainer: {
+		borderColor: '#949494',
+		borderRadius: 5,
+		margin: 10,
+		marginBottom: 0,
+		padding: 5,
+		flexDirection: 'row',
+	},
+	textInput: {
+		borderWidth: 1,
+		borderColor: '#949494',
+		padding: 10,
+		flex: 1,
+	},
+	button: {
+		margin: 50,
 	},
 });
 
