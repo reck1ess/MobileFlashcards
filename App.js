@@ -1,22 +1,34 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import DeckList from './components/DeckList';
+import React, { Component } from 'react';
+import { getDecks } from './utils/api';
+import { setNotification } from './utils/helper';
+import MainNavigator from './components/Navigator';
 
-export default class App extends React.Component {
+class App extends Component {
+	state = {
+		decks: null,
+	};
+
+	componentDidMount() {
+		setNotification();
+		this.updateDeck();
+	}
+
+	updateDeck() {
+		getDecks().then(decks => {
+			this.setState({ decks });
+		});
+	}
+
 	render() {
 		return (
-			<View style={styles.container}>
-				<DeckList />
-			</View>
+			<MainNavigator
+				screenProps={{
+					decks: this.state.decks,
+					updateDeck: () => this.updateDeck(),
+				}}
+			/>
 		);
 	}
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-});
+export default App;
