@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Button, Card, FormValidationMessage } from 'react-native-elements';
 
-import { getDeck } from '../utils/api';
+import { deleteDeck, getDeck } from '../utils/api';
 
 class Deck extends Component {
 	state = {
@@ -52,41 +52,66 @@ class Deck extends Component {
 			});
 	}
 
+	async deleteItem() {
+		const { navigation } = this.props;
+		const { title, updateDeck } = this.props.navigation.state.params;
+		await deleteDeck(title);
+
+		await updateDeck();
+
+		navigation.navigate('Home');
+	}
+
+	componentDidMount() {
+		const { updateDeck } = this.props.navigation.state.params;
+
+		updateDeck();
+	}
+
 	renderDeck() {
 		const { deck, animation } = this.state;
 		const cardCount = deck.cards.length;
 
 		return (
-			<Card title={deck.title}>
-				<Animated.Text
-					style={[styles.cardCount, { fontSize: animation }]}>
-					{cardCount}
-				</Animated.Text>
-				<Text style={styles.cardCountText}>
-					{cardCount > 1 ? ' cards' : ' card'}
-				</Text>
+			<View>
+				<Card title={deck.title}>
+					<Animated.Text
+						style={[styles.cardCount, { fontSize: animation }]}>
+						{cardCount}
+					</Animated.Text>
+					<Text style={styles.cardCountText}>
+						{cardCount > 1 ? ' cards' : ' card'}
+					</Text>
+					<Button
+						icon={{ name: 'add' }}
+						backgroundColor="#03A9F4"
+						buttonStyle={styles.addCardButton}
+						title="ADD CARD"
+						onPress={() => this.addCard()}
+					/>
+					<Button
+						icon={{ name: 'done' }}
+						backgroundColor="#009689"
+						buttonStyle={styles.startQuizButton}
+						title="START QUIZ"
+						onPress={() => this.startQuiz()}
+					/>
+					{cardCount == 0 ? (
+						<FormValidationMessage>
+							{'You cannot start quiz without card decks'}
+						</FormValidationMessage>
+					) : (
+						<FormValidationMessage />
+					)}
+				</Card>
+
 				<Button
-					icon={{ name: 'add' }}
-					backgroundColor="#03A9F4"
-					buttonStyle={styles.addCardButton}
-					title="ADD CARD"
-					onPress={() => this.addCard()}
+					title="Delete Deck"
+					buttonStyle={styles.deleteButton}
+					backgroundColor="red"
+					onPress={() => this.deleteItem()}
 				/>
-				<Button
-					icon={{ name: 'done' }}
-					backgroundColor="#009689"
-					buttonStyle={styles.startQuizButton}
-					title="START QUIZ"
-					onPress={() => this.startQuiz()}
-				/>
-				{cardCount == 0 ? (
-					<FormValidationMessage>
-						{'You cannot start quiz without card decks'}
-					</FormValidationMessage>
-				) : (
-					<FormValidationMessage />
-				)}
-			</Card>
+			</View>
 		);
 	}
 	render() {
@@ -122,6 +147,12 @@ const styles = StyleSheet.create({
 		marginLeft: 0,
 		marginRight: 0,
 		marginBottom: 0,
+	},
+	deleteButton: {
+		width: 200,
+		marginTop: 50,
+		marginLeft: 'auto',
+		marginRight: 'auto',
 	},
 });
 

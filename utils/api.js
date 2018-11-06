@@ -25,6 +25,19 @@ export function saveDeckTitle(title) {
 		});
 }
 
+export function deleteDeck(title) {
+	return AsyncStorage.getItem(DECK_STORAGE_KEY)
+		.then(JSON.parse)
+		.then(decks => {
+			if (!decks) return;
+			delete decks[title];
+			return AsyncStorage.setItem(
+				DECK_STORAGE_KEY,
+				JSON.stringify(decks)
+			);
+		});
+}
+
 export function getDecks() {
 	return AsyncStorage.getItem(DECK_STORAGE_KEY).then(data =>
 		JSON.parse(data)
