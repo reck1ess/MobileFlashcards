@@ -21,6 +21,12 @@ class Deck extends Component {
 		this.initialize(title);
 	}
 
+	componentWillReceiveProps() {
+		const { title } = this.props.navigation.state.params;
+		this.initialize(title);
+		this.setState({ animation: new Animated.Value(0) });
+	}
+
 	initialize(title) {
 		getDeck(title).then(deck => {
 			this.setState({

@@ -43,7 +43,7 @@ class AddCard extends Component {
 	handleSubmit = () => {
 		const { question, answer, deck } = this.state;
 		const { navigation } = this.props;
-		const { updateDeck } = this.props.navigation.state.params;
+		const { title, updateDeck } = this.props.navigation.state.params;
 
 		const card = { question, answer };
 		question.length !== 0 &&
@@ -56,14 +56,9 @@ class AddCard extends Component {
 
 				updateDeck();
 
-				navigation.dispatch(
-					StackActions.reset({
-						index: 0,
-						actions: [
-							NavigationActions.navigate({ routeName: 'Home' }),
-						],
-					})
-				);
+				navigation.navigate('Deck', {
+					title,
+				});
 			});
 	};
 
