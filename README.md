@@ -8,6 +8,10 @@
 > add flashcards to those decks, then take quizzes on those decks.
 > The app is built with `React Native` and was developed and tested for **iOS only**.
 
+## Demo
+
+![Demo](flashcards.gif)
+
 ## Table of Contents
 
 -   [Getting started](#getting-started)
